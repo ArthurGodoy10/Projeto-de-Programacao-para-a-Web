@@ -11,7 +11,8 @@ body#login{
  }
  body#cadastrar{
     background-image: url(../imagens/imagem3.png);
-    background-position: 200% 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
     color: white;
     font-family: Arial;
  }
@@ -40,7 +41,7 @@ div#corpo-form h1{
     padding: 20px;
 }
 a{
-    color: white;
+    color: #fff;
     text-decoration: none;
     text-align: center;
     display: block;
@@ -51,7 +52,7 @@ a:hover{
 }
 
 input[type=submit]{
-    background-color: #ff0066;
+    background-color: red;
     border: none;
     cursor: pointer;
 }
