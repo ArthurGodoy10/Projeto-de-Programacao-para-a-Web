@@ -1,69 +1,67 @@
 <?php
 
-    Class Usuario
+define('HOSTNAME',  'localhost');
+define('DATABASE', 'projeto_php');
+define('USERNAME', 'root');
+define('SENHA', 'suasenha');
+
+function conectar()
+{
+     try 
     {
-        private $pdo;
-        public $msgErro = "";// tudo ok
-
-        public function conectar($host, $nome, $usuario, $senha)
-        {
-        global $pdo;
-        global $msgErro;
-
-            try 
-            {
-                $pdo = new PDO("mysql:host=".$host.";dbname=".$nome, $usuario, $senha);
-            } 
-            catch (PDOException $e) 
-            {
-                $msgErro = $e->getMessage();
-            }
-        }
-
-        public function cadastrar($nome, $email, $senha)
-        {
-        global $pdo;
-            //verificar se já existe o email cadastrado
-            $sql = $pdo->prepare("SELECT id_usuario FROM usuarios WHERE email = :e");
-            $sql->bindValue(":e",$email);
-            $sql->execute();
-
-            if($sql->rowCount() > 0)
-            {
-                return false;// ja esta cadatrada
-            }
-            else
-            {
-            //caso não, cadatrar
-                $sql = $pdo->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (:n, :e, :s)");
-                $sql->bindValue(":n",$nome);
-                $sql->bindValue(":e",$email);
-                $sql->bindValue(":s",md5($senha));
-                $sql->execute();
-                return true;
-            }
-
-        }
-        public function logar($email, $senha)
-        {
-            global $pdo;
-            //verificar se o email e senha estao casdastrados, se sim 
-            $sql = $pdo->prepare("SELECT id_usuario FROM usuarios WHERE email = :e AND senha = :s");
-            $sql->bindValue(":e",$email);
-            $sql->bindValue(":s",md5($senha));
-            $sql->execute();
-
-            if($sql->rowCount() > 0 )
-            {
-                //entar no sistema (sessao)
-                $dado = $sql->fetch();
-                session_start();
-                $_SESSION['id_usuario'] = $dado['id_usuario'];
-                return true; //logado com sucesso
-            }
-            else
-            {
-                return false; // nao foi possivel logar
-            }
-        }
+    $conexao = new PDO("mysql:host=". HOSTNAME.";dbname=".DATABASE, USERNAME, SENHA);
+    } 
+    catch (PDOException $e) 
+    {
+    trigger_error($e->getMessage(), E_USER_ERROR);
     }
+    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    return $conexao;  
+}
+
+function cadastrar($nome, $email, $senha)
+{
+    $con = conectar();
+    //verificar se já existe o email cadastrado
+    $stmt = $con->prepare("SELECT id_usuario FROM usuarios WHERE email = :e");
+    $stmt->execute(['e' => $email ]);
+
+    if($stmt->rowCount() > 0)
+    {
+        return false;// ja esta cadatrada
+    }
+    else
+    {
+    //caso não, cadatrar
+    $stmt = $con->prepare("INSERT INTO usuarios (nome, email, senha) VALUES (:n, :e, :s)");
+    $stmt->execute([ 'n' => $nome, 'e' => $email, 's' => md5($senha) ]);
+
+    $stmt = $con->prepare("INSERT INTO pontuacao (pontuacao) VALUES (:p)");
+    $stmt->execute(['p' => 0]);
+
+    return true;
+    }
+}
+
+function logar($email, $senha)
+{
+    //verificar se o email e senha estao casdastrados, se sim 
+    $con = conectar();
+    $stmt = $con->prepare("SELECT id_usuario FROM usuarios WHERE email = :e AND senha = :s");
+    $stmt->execute([ 'e' => $email, 's' => md5($senha) ]);
+
+    if($stmt->rowCount() > 0 )
+    {
+    //entar no sistema (sessao)
+    $dado = $stmt->fetch();
+    session_start();
+    $_SESSION['id_usuario'] = $dado['id_usuario'];
+    return true; //logado com sucesso
+    }
+    else
+    {
+    return false; // nao foi possivel logar
+    echo "ERRO";
+    }
+}
