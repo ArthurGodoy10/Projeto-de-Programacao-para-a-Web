@@ -2,6 +2,8 @@
 session_start();
 session_destroy();
 
+include('Classes/usuarios.php');
+
 $past = time() - 3600;
 foreach ($_COOKIE as $key => $value) {
     setcookie($key, $value, $past, '/');
@@ -28,7 +30,7 @@ foreach ($_COOKIE as $key => $value) {
         </form>
     </div>
     <?php
-    include('Classes/usuarios.php');
+
     if (isset($_POST['email'])) {
         $email = addslashes($_POST['email']);
         $senha = addslashes($_POST['senha']);
