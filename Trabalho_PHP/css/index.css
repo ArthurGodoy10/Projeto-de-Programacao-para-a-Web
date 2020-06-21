@@ -1,0 +1,38 @@
+canvas {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+}
+
+.record-input{
+  display: none;
+}
+
+.form{
+  display: none;
+  width: 100%;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  
+
+}
+
+.submit-btn {
+  box-sizing: border-box;
+  padding: 30px;
+  border: 0px;
+  background: black;
+  color: white;
+  font-size: 20px;
+  
+}
+
+.submit-btn:hover {
+  background: red;
+}
