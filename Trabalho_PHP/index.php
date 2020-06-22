@@ -35,16 +35,15 @@ foreach ($_COOKIE as $key => $value) {
         $email = addslashes($_POST['email']);
         $senha = addslashes($_POST['senha']);
         //verificar se esta preenchido
-
         if (!empty($email) && !empty($senha)) {
             if (logar($email, $senha)) {
                 header("location: loginControler.php");
             } else {
-    ?>
+            ?>
                 <div class="msg-erro">
                     Email e/ou senha estão incorretos!
                 </div>
-    <?php
+            <?php
             }
         }
     }
