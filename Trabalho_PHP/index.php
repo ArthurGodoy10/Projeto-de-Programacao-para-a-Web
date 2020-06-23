@@ -2,7 +2,7 @@
 session_start();
 session_destroy();
 
-include('Classes/usuarios.php');
+include('usuarios.php');
 
 $past = time() - 3600;
 foreach ($_COOKIE as $key => $value) {
