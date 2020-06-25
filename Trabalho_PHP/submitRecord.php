@@ -10,3 +10,4 @@ if (isset($_POST['record'])) {
 } else {
    header('location: areaPrivada.php');
 }
+?>
